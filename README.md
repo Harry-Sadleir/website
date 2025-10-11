@@ -14,22 +14,22 @@ python run.py
 ## TODO / Ideas
 
 ### Content
-- [ ] Replace placeholder project text/images with final content.
-- [ ] Point `SUBSTACK_BASE` to my own Substack.
+- [x] Replace placeholder project text/images with final content.
+- [x] Point `SUBSTACK_BASE` to my own Substack.
 
 ### Design / UX
-- [ ] Light hover animation for project cards (already there, tune).
+- [x] Light hover animation for project cards (already there, tune).
 - [ ] Add tags (e.g., Python, Flask, Security) under titles, maybe just do this on substack tbh
 
 ### Performance
-- [ ] Convert all project PNG/JPG to WebP (keep PNG/JPG fallback).
-- [ ] Keep hero image preloaded and sized (LCP check in Lighthouse).
-- [ ] Set asset version to CSS mtime in dev; use git hash in prod.
+- [x] Convert all project PNG/JPG to WebP (keep PNG/JPG fallback).
+- [x] Keep hero image preloaded and sized (LCP check in Lighthouse).
+- [x] Set asset version to CSS mtime in dev; use git hash in prod.
 
 ### Security
-- [ ] Turn off `DEBUG` in production; run via gunicorn.
-- [ ] Set `SECRET_KEY` via environment variable on the Pi.
-- [ ] Check security headers (current: CSP, XFO, XCTO, Referrer-Policy).
+- [x] Turn off `DEBUG` in production; run via gunicorn.
+- [x] Set `SECRET_KEY` via environment variable on the Pi.
+- [x] Check security headers (current: CSP, XFO, XCTO, Referrer-Policy).
 - [ ] Rate-limit at Caddy/Nginx (e.g., 10 r/s per IP).
 
 ### Data / Integrations
