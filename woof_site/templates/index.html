@@ -4,7 +4,7 @@
 <!-- Hero -->
 <section class="hero" id="hero">
   <div class="hero__content">
-    <div class="hero__kicker">Cyber Security • London, England</div>
+    <div class="hero__kicker">Cyber Security / SWE • London, England</div>
     <h1 class="hero__title">Harry Sadleir</h1>
    <p class="hero__tagline">
   MSc Computer Science (Distinction)<br>
@@ -32,10 +32,10 @@
 <section class="about" id="about">
   <h2>About me</h2>
   <p>
-    I’m a CS grad (September 2025), looking for my first role in cyber security.
+    I’m a CS grad (September 2025), looking for my first role in cyber security or software engineering.
       I’ve built random number generators, developed web apps, fried several MCUs,
-      and I'm learning everything I can about cyber attacks.
-      I am always looking for new things to learn, and enjoy writing about my findings.
+      and I'm learning everything I can about how code works on a low level.
+      I am always looking for new projects and opportunities.
       Feel free to get in contact!
   </p>
 </section>
@@ -61,7 +61,15 @@
     <div class="proj-body">
       <h3>{{ p.title }}</h3>
       <p>{{ p.desc }}</p>
-      <span class="proj-cta">Read write-up →</span>
+    {% if p.url %}
+  {% if "substack.com" in p.url %}
+    <span class="proj-cta">Read write-up →</span>
+  {% elif "github.com" in p.url %}
+    <span class="proj-cta">View repository →</span>
+  {% else %}
+    <span class="proj-cta">Learn more →</span>
+  {% endif %}
+{% endif %}
     </div>
   </a>
 {% endfor %}
@@ -115,27 +123,45 @@
 </section>
 {% endif %}
 
-<!-- Collections (sources & readings) -->
-{% if reading.collections and reading.collections|length > 0 %}
-<section id="collections">
-  <h2>Collections</h2>
-  <div class="grid">
-    {% for c in reading.collections %}
-    <div class="card">
-      <h3>{{ c.title }}</h3>
-      <p>{{ c.desc }}</p>
-      <ul class="linklist">
-        {% for l in c.links %}
-        <li><a href="{{ l.url }}" target="_blank" rel="noopener">{{ l.title }}</a></li>
-        {% endfor %}
-      </ul>
-      {% if c.archive_substack %}
-        <p><a href="{{ c.archive_substack }}" target="_blank" rel="noopener">Archive / write-up →</a></p>
-      {% endif %}
-    </div>
+<section id="github" class="container">
+  <h2>Recent GitHub activity</h2>
+  <ul class="list">
+    {% for ev in activity %}
+      <li>
+        <a href="{{ ev.url }}" target="_blank" rel="noopener">
+          {{ ev.text }}
+        </a>
+        <span style="color:var(--muted); font-size: 0.9em;">
+          · {{ ev.when[:10] }}
+        </span>
+      </li>
+    {% else %}
+      <li>No recent activity.</li>
     {% endfor %}
-  </div>
+  </ul>
 </section>
-{% endif %}
+
+<!--&lt;!&ndash; Collections (sources & readings) &ndash;&gt;-->
+<!--{% if reading.collections and reading.collections|length > 0 %}-->
+<!--<section id="collections">-->
+<!--  <h2>Collections</h2>-->
+<!--  <div class="grid">-->
+<!--    {% for c in reading.collections %}-->
+<!--    <div class="card">-->
+<!--      <h3>{{ c.title }}</h3>-->
+<!--      <p>{{ c.desc }}</p>-->
+<!--      <ul class="linklist">-->
+<!--        {% for l in c.links %}-->
+<!--        <li><a href="{{ l.url }}" target="_blank" rel="noopener">{{ l.title }}</a></li>-->
+<!--        {% endfor %}-->
+<!--      </ul>-->
+<!--      {% if c.archive_substack %}-->
+<!--        <p><a href="{{ c.archive_substack }}" target="_blank" rel="noopener">Archive / write-up →</a></p>-->
+<!--      {% endif %}-->
+<!--    </div>-->
+<!--    {% endfor %}-->
+<!--  </div>-->
+<!--</section>-->
+<!--{% endif %}-->
 
 {% endblock %}

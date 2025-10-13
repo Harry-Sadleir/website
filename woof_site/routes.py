@@ -1,7 +1,7 @@
-# woof_site/routes.py
 from flask import Blueprint, render_template, url_for, Response
 from pathlib import Path
 from datetime import datetime, timezone
+from .github_activity import get_github_activity
 
 from .helpers import (
     fetch_recent_from_substack,
@@ -37,6 +37,7 @@ def _iso_date(p: Path) -> str:
 @bp.route("/")
 def index():
     reading = load_reading()
+
     return render_template(
         "index.html",
         projects=PROJECTS,                                  # manual key projects
@@ -44,6 +45,8 @@ def index():
         reading=reading,
         title="woofdog",
         substack_base=SUBSTACK_BASE,
+        activity = get_github_activity(limit=5)
+
     )
 
 @bp.route("/sitemap.xml")
