@@ -3,7 +3,7 @@ from pathlib import Path
 from datetime import datetime, timezone
 from .github_activity import get_github_activity
 import markdown
-from weasyprint import HTML, CSS
+# from weasyprint import HTML, CSS
 
 from .helpers import (
     fetch_recent_from_substack,
