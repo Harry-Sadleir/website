@@ -5,6 +5,7 @@ SQLAlchemy>=2.0.31
 Flask-SQLAlchemy>=3.1.1
 email-validator>=2.2.0
 markdown>=3.6
+WeasyPrint>=62.4
 gunicorn>=22.0.0
 feedparser>=6.0.11
 beautifulsoup4>=4.12.3

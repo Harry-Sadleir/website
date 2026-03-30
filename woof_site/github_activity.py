@@ -1,7 +1,7 @@
 # woof_site/github_activity.py
 import os, json, time, urllib.request, urllib.error
 
-GITHUB_USER = "woofdog7"
+GITHUB_USER = "Harry-Sadleir"
 GITHUB_TOKEN = None
 CACHE_TTL = 600  # seconds (10 minutes)
 _cache = {"ts": 0, "items": []}

@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, url_for, Response
+from flask import Blueprint, render_template, url_for, Response, request, jsonify
 from pathlib import Path
 from datetime import datetime, timezone
 from .github_activity import get_github_activity
+import markdown
+from weasyprint import HTML, CSS
 
 from .helpers import (
     fetch_recent_from_substack,
@@ -47,6 +49,79 @@ def index():
         substack_base=SUBSTACK_BASE,
         activity = get_github_activity(limit=5)
 
+    )
+
+@bp.route("/CL")
+def CL():
+    return render_template("CL.html")
+
+@bp.route("/render-markdown-preview", methods=["POST"])
+def render_markdown_preview():
+    data = request.get_json()
+    markdown_text = data.get("markdown", "")
+    html_content = markdown.markdown(markdown_text, extensions=['extra'])
+    return jsonify({"html": html_content})
+
+@bp.route("/download-pdf", methods=["POST"])
+def download_pdf():
+    markdown_text = request.form.get("markdown", "")
+    html_content = markdown.markdown(markdown_text, extensions=['extra'])
+
+    pdf_css = """
+    @import url('https://fonts.googleapis.com/css2?family=Garamond:wght@400;700&display=swap');
+
+    @page { size: A4; margin: 2cm; }
+    body { font-family: sans-serif; }
+    pre { background-color: #eee; padding: 1em; }
+    code { font-family: monospace; }
+    
+    h1 {
+        font-family: 'Garamond', serif;
+        font-size: 22px;
+        font-weight: bold;
+        margin: 0;
+        text-align: center;
+    }
+
+    h1 + p {
+        font-family: 'Garamond', serif;
+        font-size: 13px;
+        margin: 5px 0;
+        text-align: center;
+    }
+    p {
+        font-family: 'Garamond', serif;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    hr {
+        border: 0;
+        border-top: 1px solid #ccc;
+        margin: 10px auto;
+        width: 100%;
+    }
+    """
+
+    full_html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Document</title>
+        <style>{pdf_css}</style>
+    </head>
+    <body>
+        {html_content}
+    </body>
+    </html>
+    """
+
+    pdf = HTML(string=full_html).write_pdf()
+
+    return Response(
+        pdf,
+        mimetype="application/pdf",
+        headers={"Content-Disposition": "attachment;filename=document.pdf"}
     )
 
 @bp.route("/sitemap.xml")
