@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for, Response, request, jsonify
+from flask import Blueprint, render_template, url_for, Response, request, jsonify, send_from_directory
 from pathlib import Path
 from datetime import datetime, timezone
 from .github_activity import get_github_activity
@@ -123,6 +123,12 @@ def index():
 #         mimetype="application/pdf",
 #         headers={"Content-Disposition": "attachment;filename=document.pdf"}
 #     )
+
+# Vite build of portfolio/wagon/life-tracker (built with --base=/static/quest-log/).
+# No caching on index.html so a rebuild's new asset hashes are picked up immediately.
+@bp.route("/quest-log")
+def quest_log():
+    return send_from_directory(BASE_DIR / "static" / "quest-log", "index.html", max_age=0)
 
 @bp.route("/sitemap.xml")
 def sitemap():

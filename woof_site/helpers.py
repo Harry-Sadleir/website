@@ -22,7 +22,8 @@ _cache = {"ts": 0.0, "posts": []}
 def secure_headers(resp: Response):
     resp.headers["Content-Security-Policy"] = (
         "default-src 'self'; img-src 'self' https: data:; "
-        "style-src 'self' 'unsafe-inline'; script-src 'self';"
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "font-src 'self' https://fonts.gstatic.com; script-src 'self';"
     )
     resp.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     resp.headers["X-Content-Type-Options"] = "nosniff"
