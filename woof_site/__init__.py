@@ -1,3 +1,5 @@
+import os
+import secrets
 from pathlib import Path
 from flask import Flask
 from .helpers import secure_headers, add_noindex_header
@@ -6,8 +8,10 @@ from .routes import bp as main_bp
 def create_app():
     app = Flask(__name__)
 
-    # TEMP: dev secret (replace with env var on the Pi)
-    app.secret_key = "REDACTED-OLD-DEV-KEY"
+    # Real key comes from /etc/woof-site.env on the Pi (systemd EnvironmentFile).
+    # ponytail: random fallback keeps local dev and the deploy script's import check
+    # working; if SECRET_KEY is ever missing in prod, each gunicorn worker gets its own key.
+    app.secret_key = os.environ.get("SECRET_KEY") or secrets.token_hex(32)
 
     # blueprints
     app.register_blueprint(main_bp)
