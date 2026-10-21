@@ -1,6 +1,6 @@
 # woof-site
 
-Personal portfolio (Flask 3). One-page layout with projects and recent posts grabbed from placeholder substack.
+Personal portfolio (Flask 3). One-page layout with projects and recent Substack posts, plus the Quest Log app at `/quest-log`.
 
 ## Quick start
 ```bash
@@ -8,6 +8,8 @@ python -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
 python run.py
 # http://127.0.0.1:5000
+
+python -m unittest   # tests
 ```
 
 
@@ -30,7 +32,7 @@ python run.py
 - [x] Turn off `DEBUG` in production; run via gunicorn.
 - [x] Set `SECRET_KEY` via environment variable on the Pi.
 - [x] Check security headers (current: CSP, XFO, XCTO, Referrer-Policy).
-- [ ] Rate-limit at Caddy/Nginx (e.g., 10 r/s per IP).
+- [ ] Rate-limit at Cloudflare (e.g., 10 r/s per IP).
 
 ### Data / Integrations
 - [X] Substack RSS fetch: keep 24h cache; timeout 8s.
@@ -43,10 +45,11 @@ python run.py
 
 ### Code cleanup
 - [X] Set up app factory + blueprints (`routes.py`, `helpers.py`, `data/`).
-- [X] Add basic tests for helpers (Substack parsing, reading loader).
+- [X] Tests for the Substack/GitHub caching and feed parsing (`tests/`).
 
 ### Deployment
-- [X] Gunicorn + Caddy on Raspberry Pi.
-- [X] Systemd service with `Environment=SECRET_KEY=...`.
-- [X] HTTPS, HSTS, compression, and static caching.
+- [X] Gunicorn on the Raspberry Pi, behind a Cloudflare tunnel.
+- [X] Systemd service; `SECRET_KEY` comes from `/etc/woof-site.env` (root-only).
+- [X] HTTPS, compression, and static caching.
+- [ ] HSTS: Cloudflare currently sends `max-age=0` (off); turn on in SSL/TLS → Edge Certificates.
 - [X] Git deploy script to update `static/` + restart service.

@@ -14,7 +14,6 @@
     <div class="hero__links hero__links--big">
       <a href="https://github.com/Harry-Sadleir" target="_blank" rel="noopener">GitHub</a>
       <a href="https://woofdog7.substack.com" target="_blank" rel="noopener">Substack</a>
-      <a href="{{ url_for('static', filename='cv.pdf') }}" target="_blank" rel="noopener">CV</a>
       <a href="mailto:harrysadleir@gmail.com">Email</a>
       <a href="https://www.linkedin.com/in/hs7777/" target="_blank" rel="noopener">LinkedIn</a>
     </div>
@@ -32,10 +31,9 @@
 <section class="about" id="about">
   <h2>About me</h2>
   <p>
-    I’m a CS grad (September 2025), looking for my first role in cyber security / software engineering.
+    I’m a CS grad (September 2025), now working in software engineering.
       I’ve built random number generators, developed web apps, fried several MCUs,
       and I'm learning everything I can about how code works on a low level.
-      I am always looking for new projects and opportunities.
       Feel free to get in contact!
   </p>
 </section>
@@ -47,7 +45,8 @@
   <div class="grid projects-grid">
 {% for p in projects %}
   {% set eager = 'eager' if loop.index0 < 2 else 'lazy' %}
-  <a class="proj-card" href="{{ p.url }}" target="_blank" rel="noopener">
+  {# A project without a link yet is a plain card, not a link back to this page #}
+  {% if p.url %}<a class="proj-card" href="{{ p.url }}" target="_blank" rel="noopener">{% else %}<div class="proj-card">{% endif %}
     <div class="proj-media">
       <picture>
         <source srcset="{{ url_for('static', filename=p.image|replace('.png','.webp')|replace('.jpg','.webp')|replace('.jpeg','.webp')) }}" type="image/webp">
@@ -71,7 +70,7 @@
   {% endif %}
 {% endif %}
     </div>
-  </a>
+  {% if p.url %}</a>{% else %}</div>{% endif %}
 {% endfor %}
   </div>
 </section>
@@ -141,27 +140,28 @@
   </ul>
 </section>
 
-<!--&lt;!&ndash; Collections (sources & readings) &ndash;&gt;-->
-<!--{% if reading.collections and reading.collections|length > 0 %}-->
-<!--<section id="collections">-->
-<!--  <h2>Collections</h2>-->
-<!--  <div class="grid">-->
-<!--    {% for c in reading.collections %}-->
-<!--    <div class="card">-->
-<!--      <h3>{{ c.title }}</h3>-->
-<!--      <p>{{ c.desc }}</p>-->
-<!--      <ul class="linklist">-->
-<!--        {% for l in c.links %}-->
-<!--        <li><a href="{{ l.url }}" target="_blank" rel="noopener">{{ l.title }}</a></li>-->
-<!--        {% endfor %}-->
-<!--      </ul>-->
-<!--      {% if c.archive_substack %}-->
-<!--        <p><a href="{{ c.archive_substack }}" target="_blank" rel="noopener">Archive / write-up →</a></p>-->
-<!--      {% endif %}-->
-<!--    </div>-->
-<!--    {% endfor %}-->
-<!--  </div>-->
-<!--</section>-->
-<!--{% endif %}-->
+{# Collections (sources & readings): parked until it's reworked, see README TODO
+{% if reading.collections and reading.collections|length > 0 %}
+<section id="collections">
+  <h2>Collections</h2>
+  <div class="grid">
+    {% for c in reading.collections %}
+    <div class="card">
+      <h3>{{ c.title }}</h3>
+      <p>{{ c.desc }}</p>
+      <ul class="linklist">
+        {% for l in c.links %}
+        <li><a href="{{ l.url }}" target="_blank" rel="noopener">{{ l.title }}</a></li>
+        {% endfor %}
+      </ul>
+      {% if c.archive_substack %}
+        <p><a href="{{ c.archive_substack }}" target="_blank" rel="noopener">Archive / write-up →</a></p>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+#}
 
 {% endblock %}

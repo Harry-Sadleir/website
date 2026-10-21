@@ -1,8 +1,7 @@
 # woof_site/github_activity.py
-import os, json, time, urllib.request, urllib.error
+import json, time, urllib.request, urllib.error
 
 GITHUB_USER = "Harry-Sadleir"
-GITHUB_TOKEN = None
 CACHE_TTL = 600  # seconds (10 minutes)
 _cache = {"ts": 0, "items": []}
 
@@ -12,7 +11,6 @@ def _request(url):
     req = urllib.request.Request(url, headers={
         "User-Agent": "woof-site",
         "Accept": "application/vnd.github+json",
-        **({"Authorization": f"Bearer {GITHUB_TOKEN}"} if GITHUB_TOKEN else {})
     })
     with urllib.request.urlopen(req, timeout=10) as resp:
         return json.loads(resp.read().decode("utf-8"))
@@ -52,20 +50,14 @@ def _summarize(ev):
     return {"when": when, "text": f"{t} in {repo}", "url": url}
 
 def get_github_activity(limit=5):
+    # Reuse the saved copy for 10 min even when it's empty or the call failed,
+    # so a quiet account or a GitHub outage doesn't cost every page view a request.
     now = time.time()
-    if now - _cache["ts"] < CACHE_TTL and _cache["items"]:
+    if now - _cache["ts"] < CACHE_TTL:
         return _cache["items"][:limit]
+    _cache["ts"] = now
     try:
-        raw = _request(API_URL)
-        items = []
-        for ev in raw:
-            s = _summarize(ev)
-            if s: items.append(s)
-            if len(items) >= 20:  # gather more than we display after filtering
-                break
-        _cache["ts"] = now
-        _cache["items"] = items
-        return items[:limit]
+        _cache["items"] = [_summarize(ev) for ev in _request(API_URL)[:20]]
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
-        # on error, return whatever we last had
-        return _cache["items"][:limit]
+        pass  # keep showing whatever we last had
+    return _cache["items"][:limit]
